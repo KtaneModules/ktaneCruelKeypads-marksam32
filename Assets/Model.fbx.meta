@@ -1,0 +1,157 @@
+fileFormatVersion: 2
+guid: 5e1599c616619004292be0e3615257f9
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Camera
+    100002: ComponentKeypad
+    100004: key
+    100006: key.001
+    100008: key.002
+    100010: key.003
+    100012: Key_BL
+    100014: Key_BR
+    100016: Key_TL
+    100018: Key_TR
+    100020: Lamp
+    100022: LED
+    100024: LED.001
+    100026: LED.002
+    100028: LED.003
+    100030: //RootNode
+    100032: PuzzleBackground
+    100034: RecessedInner
+    400000: Camera
+    400002: ComponentKeypad
+    400004: key
+    400006: key.001
+    400008: key.002
+    400010: key.003
+    400012: Key_BL
+    400014: Key_BR
+    400016: Key_TL
+    400018: Key_TR
+    400020: Lamp
+    400022: LED
+    400024: LED.001
+    400026: LED.002
+    400028: LED.003
+    400030: //RootNode
+    400032: PuzzleBackground
+    400034: RecessedInner
+    2000000: Camera
+    2100000: Component_Keypad_Background_mat1
+    2100002: Component_PuzzleBackground_mat
+    2100004: Component_Keypad_LED_OFF_mat
+    2100006: Component_Keypad_mat
+    2300000: key
+    2300002: key.001
+    2300004: key.002
+    2300006: key.003
+    2300008: LED
+    2300010: LED.001
+    2300012: LED.002
+    2300014: LED.003
+    2300016: PuzzleBackground
+    2300018: RecessedInner
+    3300000: key
+    3300002: key.001
+    3300004: key.002
+    3300006: key.003
+    3300008: LED
+    3300010: LED.001
+    3300012: LED.002
+    3300014: LED.003
+    3300016: PuzzleBackground
+    3300018: RecessedInner
+    4300000: RecessedInner
+    4300002: PuzzleBackground
+    4300004: LED.003
+    4300006: key.003
+    4300008: LED.002
+    4300010: key.002
+    4300012: LED.001
+    4300014: key.001
+    4300016: LED
+    4300018: key
+    10800000: Lamp
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
