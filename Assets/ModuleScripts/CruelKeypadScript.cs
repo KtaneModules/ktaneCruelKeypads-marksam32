@@ -76,6 +76,11 @@ public class CruelKeypadScript : MonoBehaviour
 
     private static readonly Regex TPRegex = new Regex("^press ([1-4])([1-4])([1-4])([1-4])$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
+    //logging
+    private string VennDiagramLogging;
+    private bool[] SpecialRuleLogging = new bool[] { false, false, false, false, false, false};
+    private int SpecialRuleIndexLogging;
+
     // Use this for initialization
     void Start()
     {
@@ -125,14 +130,14 @@ public class CruelKeypadScript : MonoBehaviour
     private void HandlePress(int index)
     {
         buttonPressed[index] = true;
-        Debug.LogFormat("[Cruel Keyads #{0}] Pressed button: {1} label {2}.", _moduleId, index + 1, ButtonTexts[index].text.ToString());
+        Debug.LogFormat("[Cruel Keypads #{0}] Pressed button: {1} label {2}.", _moduleId, index + 1, ButtonTexts[index].text.ToString());
         Lights[index].SetActive(false);
         ButtonObjects[index].transform.localPosition = new Vector3(0, -0.01f, 0);
         ButtonHighlites[index].SetActive(false);
         PressedButtons.Add(char.Parse(ButtonTexts[index].text));
         if (PressedButtons.ToArray().Length == 4)
         {
-            Debug.LogFormat("[Cruel Keyads #{0}] You entered: {1} Expected: {2}.", _moduleId, string.Join(", ", PressedButtons.Select(x => x.ToString()).ToArray()), string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
+            Debug.LogFormat("[Cruel Keypads #{0}] You entered: {1} Expected: {2}.", _moduleId, string.Join(", ", PressedButtons.Select(x => x.ToString()).ToArray()), string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
             for (var i = 0; i < Lights.Length; ++i)
             {
                 Lights[i].SetActive(true);
@@ -144,7 +149,7 @@ public class CruelKeypadScript : MonoBehaviour
                 Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, Buttons[index].transform);
                 if(stage == 4)
                 {
-                    Debug.LogFormat("[Cruel Keyads #{0}] All 3 stages passed. Module solved.s", _moduleId);
+                    Debug.LogFormat("[Cruel Keypads #{0}] All 3 stages passed. Module solved.s", _moduleId);
                     Module.HandlePass();
                     StageText.text = "";
                     StripRenderer.material = BlackMat; 
@@ -155,14 +160,14 @@ public class CruelKeypadScript : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogFormat("[Cruel Keyads #{0}] Stage: {1} passed.", _moduleId, stage - 1);
+                    Debug.LogFormat("[Cruel Keypads #{0}] Stage: {1} passed.", _moduleId, stage - 1);
                     Initialize(false);
                 }
             }
             else
             {
                 Module.HandleStrike();
-                Debug.LogFormat("[Cruel Keyads #{0}] STRIKE! Module resets.", _moduleId);
+                Debug.LogFormat("[Cruel Keypads #{0}] STRIKE! Module resets.", _moduleId);
                 Initialize(true);
             }
         }
@@ -210,10 +215,12 @@ public class CruelKeypadScript : MonoBehaviour
         GenerateAnswer();
         StageText.text = stage.ToString();
         StripRenderer.material = StripColors[(int)stripColor];
-        Debug.LogFormat("[Cruel Keyads #{0}] ------------ Stage: {1} ------------.", _moduleId, stage);
-        Debug.LogFormat("[Cruel Keyads #{0}] The selected symbols are: {1}.", _moduleId, string.Join(", ", pickedSymbols.Select(x => x.ToString()).ToArray()));
-        Debug.LogFormat("[Cruel Keyads #{0}] The strip color is: {1}.", _moduleId, stripColor.ToString());
-        Debug.LogFormat("[Cruel Keyads #{0}] The the correct order is: {1}.", _moduleId, string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
+        Debug.LogFormat("[Cruel Keypads #{0}] ------------ Stage: {1} ------------.", _moduleId, stage);
+        Debug.LogFormat("[Cruel Keypads #{0}] The selected symbols are: {1}.", _moduleId, string.Join(", ", pickedSymbols.Select(x => x.ToString()).ToArray()));
+        Debug.LogFormat("[Cruel Keypads #{0}] The strip color is: {1}.", _moduleId, stripColor.ToString());
+        Debug.LogFormat("[Cruel Keypads #{0}] The correct table is: {1}.", _moduleId, VennDiagramLogging);
+        Debug.LogFormat("[Cruel Keypads #{0}] The special rule is {1}.", _moduleId, SpecialRuleLogging[SpecialRuleIndexLogging].ToString());
+        Debug.LogFormat("[Cruel Keypads #{0}] The correct order is: {1}.", _moduleId, string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
     }
 
     private Colors GetColor(int color)
@@ -265,21 +272,27 @@ public class CruelKeypadScript : MonoBehaviour
         switch (solution.Type)
         {
             case VennDiagram.A:
+                VennDiagramLogging = "Table A";
                 order = OrderA;
                 break;
             case VennDiagram.B:
+                VennDiagramLogging = "Table B";
                 order = OrderB;
                 break;
             case VennDiagram.C:
+                VennDiagramLogging = "Table C";
                 order = OrderC;
                 break;
             case VennDiagram.D:
+                VennDiagramLogging = "Table D";
                 order = OrderD;
                 break;
             case VennDiagram.E:
+                VennDiagramLogging = "Table E";
                 order = OrderE;
                 break;
             default:
+                VennDiagramLogging = "Table F";
                 order = OrderF;
                 break;
         }
@@ -292,17 +305,23 @@ public class CruelKeypadScript : MonoBehaviour
         switch (diagram)
         {
             case VennDiagram.A:
+                SpecialRuleLogging[0] = true;
+                SpecialRuleIndexLogging = 0;
                 sortedSymbols = Swap(Swap(sortedSymbols, 0, 3), 1, 2);
                 break;
             case VennDiagram.B:
-                if(stage == 2 || stage == 3)
+                SpecialRuleIndexLogging = 1;
+                if (stage == 2 || stage == 3)
                 {
+                    SpecialRuleLogging[1] = true;
                     sortedSymbols = Swap(sortedSymbols, 0, 3);
                 }
                 break;
             case VennDiagram.C:
-                if(Info.GetPortCount(Port.PS2) > 0 && Info.GetOnIndicators().Count() > 0)
+                SpecialRuleIndexLogging = 2;
+                if (Info.GetPortCount(Port.PS2) > 0 && Info.GetOnIndicators().Count() > 0)
                 {
+                    SpecialRuleLogging[2] = true;
                     sortedSymbols.Reverse();
                 }
                 else
@@ -311,12 +330,15 @@ public class CruelKeypadScript : MonoBehaviour
                 }
                 break;
             case VennDiagram.D:
-                if(Stage1Symbols.Contains('ㅊ') || Stage2Symbols.Contains('ㅊ') || sortedSymbols.Contains('ㅊ'))
+                SpecialRuleIndexLogging = 3;
+                if (Stage1Symbols.Contains('ㅊ') || Stage2Symbols.Contains('ㅊ') || sortedSymbols.Contains('ㅊ'))
                 {
+                    SpecialRuleLogging[3] = true;
                     sortedSymbols.Reverse();
                 }
                 break;
             case VennDiagram.E:
+                SpecialRuleIndexLogging = 4;
                 if (stage == 1)
                 {
                     break;
@@ -325,6 +347,7 @@ public class CruelKeypadScript : MonoBehaviour
                 {
                     if (StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
                     {
+                        SpecialRuleLogging[4] = true;
                         sortedSymbols.Reverse();
                         break;
                     }
@@ -333,17 +356,20 @@ public class CruelKeypadScript : MonoBehaviour
                 {
                     if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue)
                     {
+                        SpecialRuleLogging[4] = true;
                         sortedSymbols.Reverse();
                         break;
                     }
                 }              
                 break;
             default:
+                SpecialRuleIndexLogging = 5;
                 char[] serialNumberChars = Info.GetSerialNumber().ToLowerInvariant().ToCharArray();
                 foreach(var serialNumberChar in serialNumberChars)
                 {
                     if (Info.GetPorts().Contains(serialNumberChar.ToString()))
                     {
+                        SpecialRuleLogging[5] = true;
                         sortedSymbols = Swap(sortedSymbols, 2, 3);
                         break;
                     }
