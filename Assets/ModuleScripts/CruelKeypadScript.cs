@@ -5,6 +5,7 @@ using rnd = UnityEngine.Random;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections;
+using System;
 
 public class CruelKeypadScript : MonoBehaviour
 {
@@ -83,7 +84,7 @@ public class CruelKeypadScript : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {
+    {          
         _moduleId = ++_moduleIdCounter;
         Module.OnActivate += Activate;
     }
@@ -364,24 +365,38 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             default:
                 SpecialRuleIndexLogging = 5;
-                char[] serialNumberChars = Info.GetSerialNumber().ToLowerInvariant().ToCharArray();
-                foreach(var serialNumberChar in serialNumberChars)
-                {
-                    if (Info.GetPorts().Contains(serialNumberChar.ToString()))
-                    {
-                        SpecialRuleLogging[5] = true;
-                        sortedSymbols = Swap(sortedSymbols, 2, 3);
-                        break;
-                    }
-                    else
-                    {
-                        sortedSymbols = Swap(sortedSymbols, 0, 1);
-                        break;
-                    }
-                }
+                HandleCaseF();
                 break;
         }
-    }   
+    }
+
+    private void HandleCaseF()
+    {
+        bool found = false;
+        char[] serialNumberChars = Info.GetSerialNumber().ToLowerInvariant().ToCharArray();
+        foreach (var serialNumberChar in serialNumberChars)
+        {
+            foreach (var port in Info.GetPorts())
+            {
+                if (port.ToLowerInvariant().Contains(serialNumberChar.ToString()))
+                {
+                    SpecialRuleLogging[5] = true;
+                    sortedSymbols = Swap(sortedSymbols, 2, 3);
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+            {
+                break;
+            }
+        }
+
+        if (!found)
+        {
+                sortedSymbols = Swap(sortedSymbols, 0, 1);
+        }
+    }
 
     private static IList<char> Swap(IList<char> list, int index1, int index2)
     {
@@ -389,12 +404,6 @@ public class CruelKeypadScript : MonoBehaviour
         list[index1] = list[index2];
         list[index2] = value1;
         return list;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
 #pragma warning disable 414
