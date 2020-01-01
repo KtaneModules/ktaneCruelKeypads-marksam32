@@ -42,14 +42,14 @@ public class CruelKeypadScript : MonoBehaviour
    
     private VennDiagram DiagramOutput;
 
-    private List<char> Symbols = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅎ', 'ㄴ', 'ㄸ' };
+    private List<char> Symbols = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
 
-    private List<char> OrderA = new List<char>() { 'ㅃ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
-    private List<char> OrderB = new List<char>() { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', 'ㄱ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ' };
-    private List<char> OrderC = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅎ', 'ㄴ', 'ㄸ' };
-    private List<char> OrderD = new List<char>() { 'ㄱ', 'ㅎ', 'ㄲ', 'ㅍ', 'ㄴ', 'ㅌ', 'ㄷ', 'ㅋ', 'ㄸ', 'ㅊ', 'ㄹ', 'ㅉ', 'ㅁ', 'ㅈ', 'ㅂ', 'ㅇ', 'ㅃ', 'ㅆ', 'ㅅ' };
-    private List<char> OrderE = new List<char>() { 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅎ', 'ㅊ', 'ㅋ', 'ㄱ', 'ㄲ', 'ㄴ', 'ㅅ', 'ㅆ', 'ㅈ', 'ㅍ', 'ㅉ', 'ㅇ', 'ㅌ' };
-    private List<char> OrderF = new List<char>() { 'ㅋ', 'ㄸ', 'ㄷ', 'ㅅ', 'ㅍ', 'ㅌ', 'ㅁ', 'ㄴ', 'ㅃ', 'ㅉ', 'ㄲ', 'ㅆ', 'ㅎ', 'ㅈ', 'ㅊ', 'ㅂ', 'ㄹ', 'ㄱ', 'ㅇ' };
+    private List<char> OrderA = new List<char>() { 'ㅃ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ' };
+    private List<char> OrderB = new List<char>() { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ', 'ㄱ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ' };
+    private List<char> OrderC = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
+    private List<char> OrderD = new List<char>() { 'ㄱ', 'ㅢ', 'ㄲ', 'ㅍ', 'ㄴ', 'ㅌ', 'ㄷ', 'ㅋ', 'ㄸ', 'ㅟ', 'ㄹ', 'ㅉ', 'ㅁ', 'ㅈ', 'ㅂ', 'ㅇ', 'ㅃ', 'ㅆ', 'ㅅ' };
+    private List<char> OrderE = new List<char>() { 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅢ', 'ㅟ', 'ㅋ', 'ㄱ', 'ㄲ', 'ㄴ', 'ㅅ', 'ㅆ', 'ㅈ', 'ㅍ', 'ㅉ', 'ㅇ', 'ㅌ' };
+    private List<char> OrderF = new List<char>() { 'ㅋ', 'ㄸ', 'ㄷ', 'ㅅ', 'ㅍ', 'ㅌ', 'ㅁ', 'ㄴ', 'ㅃ', 'ㅉ', 'ㄲ', 'ㅆ', 'ㅢ', 'ㅈ', 'ㅟ', 'ㅂ', 'ㄹ', 'ㄱ', 'ㅇ' };
 
     private IList<char> pickedSymbols = new List<char>();
     private IList<char> sortedSymbols = new List<char>();
@@ -245,7 +245,7 @@ public class CruelKeypadScript : MonoBehaviour
 
     private void GenerateAnswer()
     {
-        List<char> allowedSymbols = new List<char> { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ' };
+        List<char> allowedSymbols = new List<char> { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ' };
         char[] colorChars = stripColor.ToString().ToLowerInvariant().ToCharArray();
         if(stripColor == Colors.Blue || stripColor == Colors.Red || stripColor == Colors.Green)
         {
@@ -332,7 +332,7 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             case VennDiagram.D:
                 SpecialRuleIndexLogging = 3;
-                if (Stage1Symbols.Contains('ㅊ') || Stage2Symbols.Contains('ㅊ') || sortedSymbols.Contains('ㅊ'))
+                if (Stage1Symbols.Contains('ㅟ') || Stage2Symbols.Contains('ㅟ') || sortedSymbols.Contains('ㅟ'))
                 {
                     SpecialRuleLogging[3] = true;
                     sortedSymbols.Reverse();
