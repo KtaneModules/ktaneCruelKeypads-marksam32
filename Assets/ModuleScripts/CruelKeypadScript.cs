@@ -355,7 +355,7 @@ public class CruelKeypadScript : MonoBehaviour
                 }
                 else
                 {
-                    if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue)
+                    if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue || StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
                     {
                         SpecialRuleLogging[4] = true;
                         sortedSymbols.Reverse();
