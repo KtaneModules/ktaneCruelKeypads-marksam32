@@ -320,7 +320,7 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             case VennDiagram.C:
                 SpecialRuleIndexLogging = 2;
-                if (Info.GetPortCount(Port.PS2) > 0 && Info.GetOnIndicators().Count() > 0)
+                if (Info.IsPortPresent(Port.PS2) && Info.GetOnIndicators().Count() > 0)
                 {
                     SpecialRuleLogging[2] = true;
                     sortedSymbols.Reverse();
