@@ -84,7 +84,7 @@ public class CruelKeypadScript : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {          
+    {
         _moduleId = ++_moduleIdCounter;
         Module.OnActivate += Activate;
     }
@@ -303,6 +303,7 @@ public class CruelKeypadScript : MonoBehaviour
 
     private void GetSpecialRule(VennDiagram diagram)
     {
+        var concreteList = (List<char>)sortedSymbols;
         switch (diagram)
         {
             case VennDiagram.A:
@@ -320,48 +321,30 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             case VennDiagram.C:
                 SpecialRuleIndexLogging = 2;
+                
                 if (Info.IsPortPresent(Port.PS2) && Info.GetOnIndicators().Count() > 0)
                 {
                     SpecialRuleLogging[2] = true;
-                    sortedSymbols.Reverse();
+                    concreteList.Reverse();
                 }
                 else
                 {
                     sortedSymbols = Swap(sortedSymbols, 0, 1);
                 }
+                sortedSymbols = concreteList;
                 break;
             case VennDiagram.D:
                 SpecialRuleIndexLogging = 3;
                 if (Stage1Symbols.Contains('ㅟ') || Stage2Symbols.Contains('ㅟ') || sortedSymbols.Contains('ㅟ'))
                 {
                     SpecialRuleLogging[3] = true;
-                    sortedSymbols.Reverse();
+                    concreteList.Reverse();
                 }
+                sortedSymbols = concreteList;
                 break;
             case VennDiagram.E:
                 SpecialRuleIndexLogging = 4;
-                if (stage == 1)
-                {
-                    break;
-                }
-                else if (stage == 2)
-                {
-                    if (StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
-                    {
-                        SpecialRuleLogging[4] = true;
-                        sortedSymbols.Reverse();
-                        break;
-                    }
-                }
-                else
-                {
-                    if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue || StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
-                    {
-                        SpecialRuleLogging[4] = true;
-                        sortedSymbols.Reverse();
-                        break;
-                    }
-                }              
+                HandleCaseE();      
                 break;
             default:
                 SpecialRuleIndexLogging = 5;
@@ -391,11 +374,37 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             }
         }
-
         if (!found)
         {
                 sortedSymbols = Swap(sortedSymbols, 0, 1);
         }
+    }
+
+    private void HandleCaseE()
+    {
+        var concreteList = (List<char>)sortedSymbols;
+
+        if (stage == 1)
+        {
+            return;
+        }
+        else if (stage == 2)
+        {
+            if (StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
+            {
+                SpecialRuleLogging[4] = true;
+                concreteList.Reverse();
+            }
+        }
+        else
+        {
+            if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue || StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
+            {
+                SpecialRuleLogging[4] = true;
+                concreteList.Reverse();
+            }
+        }
+        sortedSymbols = concreteList;
     }
 
     private static IList<char> Swap(IList<char> list, int index1, int index2)
