@@ -5,7 +5,6 @@ using rnd = UnityEngine.Random;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections;
-using System;
 
 public class CruelKeypadScript : MonoBehaviour
 {
@@ -14,7 +13,8 @@ public class CruelKeypadScript : MonoBehaviour
     public KMBombInfo Info;
 
     public KMSelectable[] Buttons;
-    public TextMesh[] ButtonTexts;
+    public SpriteRenderer[] SpriteRenderers;
+    public Sprite[] Sprites;
     public TextMesh StageText;
     public MeshRenderer StripRenderer;
     public Material[] StripColors;
@@ -24,12 +24,12 @@ public class CruelKeypadScript : MonoBehaviour
     public GameObject[] ButtonHighlites;
 
     private static int _moduleIdCounter = 1;
-    private int _moduleId = 0;
+    private int _moduleId;
     private bool _isSolved = false;
 
     private int stage = 1;
 
-    private enum Colors
+    private enum CruelKeypadsColor
     {
         Red = 0,
         Green = 1,
@@ -38,18 +38,18 @@ public class CruelKeypadScript : MonoBehaviour
         Magenta = 4,
         White = 5
     }
-    private Colors stripColor;
+    private CruelKeypadsColor stripColor;
    
     private VennDiagram DiagramOutput;
 
-    private List<char> Symbols = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
+    private static readonly List<char> Symbols = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
 
-    private List<char> OrderA = new List<char>() { 'ㅃ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ' };
-    private List<char> OrderB = new List<char>() { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ', 'ㄱ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ' };
-    private List<char> OrderC = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
-    private List<char> OrderD = new List<char>() { 'ㄱ', 'ㅢ', 'ㄲ', 'ㅍ', 'ㄴ', 'ㅌ', 'ㄷ', 'ㅋ', 'ㄸ', 'ㅟ', 'ㄹ', 'ㅉ', 'ㅁ', 'ㅈ', 'ㅂ', 'ㅇ', 'ㅃ', 'ㅆ', 'ㅅ' };
-    private List<char> OrderE = new List<char>() { 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅢ', 'ㅟ', 'ㅋ', 'ㄱ', 'ㄲ', 'ㄴ', 'ㅅ', 'ㅆ', 'ㅈ', 'ㅍ', 'ㅉ', 'ㅇ', 'ㅌ' };
-    private List<char> OrderF = new List<char>() { 'ㅋ', 'ㄸ', 'ㄷ', 'ㅅ', 'ㅍ', 'ㅌ', 'ㅁ', 'ㄴ', 'ㅃ', 'ㅉ', 'ㄲ', 'ㅆ', 'ㅢ', 'ㅈ', 'ㅟ', 'ㅂ', 'ㄹ', 'ㄱ', 'ㅇ' };
+    private static readonly List<char> OrderA = new List<char>() { 'ㅃ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ' };
+    private static readonly List<char> OrderB = new List<char>() { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅢ', 'ㄱ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ' };
+    private static readonly List<char> OrderC = new List<char>() { 'ㄹ', 'ㅁ', 'ㅂ', 'ㄱ', 'ㄲ', 'ㄷ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅢ', 'ㄴ', 'ㄸ' };
+    private static readonly List<char> OrderD = new List<char>() { 'ㄱ', 'ㅢ', 'ㄲ', 'ㅍ', 'ㄴ', 'ㅌ', 'ㄷ', 'ㅋ', 'ㄸ', 'ㅟ', 'ㄹ', 'ㅉ', 'ㅁ', 'ㅈ', 'ㅂ', 'ㅇ', 'ㅃ', 'ㅆ', 'ㅅ' };
+    private static readonly List<char> OrderE = new List<char>() { 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅢ', 'ㅟ', 'ㅋ', 'ㄱ', 'ㄲ', 'ㄴ', 'ㅅ', 'ㅆ', 'ㅈ', 'ㅍ', 'ㅉ', 'ㅇ', 'ㅌ' };
+    private static readonly List<char> OrderF = new List<char>() { 'ㅋ', 'ㄸ', 'ㄷ', 'ㅅ', 'ㅍ', 'ㅌ', 'ㅁ', 'ㄴ', 'ㅃ', 'ㅉ', 'ㄲ', 'ㅆ', 'ㅢ', 'ㅈ', 'ㅟ', 'ㅂ', 'ㄹ', 'ㄱ', 'ㅇ' };
 
     private IList<char> pickedSymbols = new List<char>();
     private IList<char> sortedSymbols = new List<char>();
@@ -71,15 +71,15 @@ public class CruelKeypadScript : MonoBehaviour
         new VennDiagramF()
     };
 
-    private bool[] buttonPressed = new bool[] { false, false, false, false, };
+    private readonly bool[] buttonPressed = new bool[] { false, false, false, false, };
 
-    private Colors[] StageColor = new Colors[2];
+    private CruelKeypadsColor[] StageColor = new CruelKeypadsColor[2];
 
     private static readonly Regex TPRegex = new Regex("^press ([1-4])([1-4])([1-4])([1-4])$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
     //logging
     private string VennDiagramLogging;
-    private bool[] SpecialRuleLogging = new bool[] { false, false, false, false, false, false};
+    private readonly bool[] SpecialRuleLogging = new bool[] { false, false, false, false, false, false};
     private int SpecialRuleIndexLogging;
 
     // Use this for initialization
@@ -116,10 +116,9 @@ public class CruelKeypadScript : MonoBehaviour
 
     void GenerateSymbols()
     {
-        char symbol;
         for (int i = 0; i < 4; ++i)
         {
-            symbol = Symbols.PickRandom();
+            var symbol = Symbols.PickRandom();
             while (pickedSymbols.Contains(symbol))
             {
                 symbol = Symbols.PickRandom();
@@ -131,11 +130,11 @@ public class CruelKeypadScript : MonoBehaviour
     private void HandlePress(int index)
     {
         buttonPressed[index] = true;
-        Debug.LogFormat("[Cruel Keypads #{0}] Pressed button: {1} label {2}.", _moduleId, index + 1, ButtonTexts[index].text.ToString());
+        Debug.LogFormat("[Cruel Keypads #{0}] Pressed button: {1} label {2}.", _moduleId, index + 1, pickedSymbols[index].ToString());
         Lights[index].SetActive(false);
         ButtonObjects[index].transform.localPosition = new Vector3(0, -0.01f, 0);
         ButtonHighlites[index].SetActive(false);
-        PressedButtons.Add(char.Parse(ButtonTexts[index].text));
+        PressedButtons.Add(pickedSymbols[index]);
         if (PressedButtons.ToArray().Length == 4)
         {
             Debug.LogFormat("[Cruel Keypads #{0}] You entered: {1} Expected: {2}.", _moduleId, string.Join(", ", PressedButtons.Select(x => x.ToString()).ToArray()), string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
@@ -144,19 +143,20 @@ public class CruelKeypadScript : MonoBehaviour
                 Lights[i].SetActive(true);
                 ButtonObjects[i].transform.localPosition = new Vector3(0, 0, 0);
             }
-            if(string.Join(", ", PressedButtons.Select(x => x.ToString()).ToArray()) == string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()))
+            if(string.Join("", PressedButtons.Select(x => x.ToString()).ToArray()) == string.Join("", sortedSymbols.Select(x => x.ToString()).ToArray()))
             {
                 stage++;
                 Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, Buttons[index].transform);
                 if(stage == 4)
                 {
-                    Debug.LogFormat("[Cruel Keypads #{0}] All 3 stages passed. Module solved.s", _moduleId);
+                    Debug.LogFormat("[Cruel Keypads #{0}] All 3 stages passed. Module solved.", _moduleId);
                     Module.HandlePass();
+                    _isSolved = true;
                     StageText.text = "";
                     StripRenderer.material = BlackMat; 
                     for (int i = 0; i < 4; ++i)
                     {
-                        ButtonTexts[i].text = "";
+                        SpriteRenderers[i].gameObject.SetActive(false);
                     }
                 }
                 else
@@ -180,7 +180,7 @@ public class CruelKeypadScript : MonoBehaviour
         if (reset)
         {
             stage = 1;
-            StageColor = new Colors[2];
+            StageColor = new CruelKeypadsColor[2];
             Stage1Symbols.Clear();
             Stage2Symbols.Clear();
         }
@@ -196,7 +196,7 @@ public class CruelKeypadScript : MonoBehaviour
         stripColor = GetColor(rnd.Range(0, 6));
         PressedButtons = new List<char>();
         GenerateSymbols();
-        var SymbolArray = pickedSymbols.ToArray();
+        var symbolArray = pickedSymbols.ToArray();
         if(stage == 1)
         {
             Stage1Symbols = pickedSymbols;
@@ -207,7 +207,7 @@ public class CruelKeypadScript : MonoBehaviour
         }
         for (int i = 0; i < 4; ++i)
         {
-            ButtonTexts[i].text = SymbolArray[i].ToString();
+            SpriteRenderers[i].sprite = GetSprite(symbolArray[i]);
         }
         if (stage < 3)
         {
@@ -224,30 +224,30 @@ public class CruelKeypadScript : MonoBehaviour
         Debug.LogFormat("[Cruel Keypads #{0}] The correct order is: {1}.", _moduleId, string.Join(", ", sortedSymbols.Select(x => x.ToString()).ToArray()));
     }
 
-    private Colors GetColor(int color)
+    private CruelKeypadsColor GetColor(int color)
     {
         switch (color)
         {
             case 0:
-                return Colors.Red;
+                return CruelKeypadsColor.Red;
             case 1:
-                return Colors.Green;
+                return CruelKeypadsColor.Green;
             case 2:
-                return Colors.Blue;
+                return CruelKeypadsColor.Blue;
             case 3:
-                return Colors.Yellow;
+                return CruelKeypadsColor.Yellow;
             case 4:
-                return Colors.Magenta;
+                return CruelKeypadsColor.Magenta;
             default:
-                return Colors.White;
+                return CruelKeypadsColor.White;
         }
     }
 
     private void GenerateAnswer()
     {
-        List<char> allowedSymbols = new List<char> { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ' };
-        char[] colorChars = stripColor.ToString().ToLowerInvariant().ToCharArray();
-        if(stripColor == Colors.Blue || stripColor == Colors.Red || stripColor == Colors.Green)
+        var allowedSymbols = new List<char> { 'ㅇ', 'ㅈ', 'ㅉ', 'ㅟ', 'ㅋ' };
+        var colorChars = stripColor.ToString().ToLowerInvariant().ToCharArray();
+        if(stripColor == CruelKeypadsColor.Blue || stripColor == CruelKeypadsColor.Red || stripColor == CruelKeypadsColor.Green)
         {
             circles.Add(1);
         }
@@ -267,7 +267,7 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             }
         }
-        var solution = Diagrams.Where(x => x.IsMatch(circles)).SingleOrDefault();
+        var solution = Diagrams.SingleOrDefault(x => x.IsMatch(circles));
         sortedSymbols = pickedSymbols;
         List<char> order = null;
         switch (solution.Type)
@@ -322,7 +322,7 @@ public class CruelKeypadScript : MonoBehaviour
             case VennDiagram.C:
                 SpecialRuleIndexLogging = 2;
                 
-                if (Info.IsPortPresent(Port.PS2) && Info.GetOnIndicators().Count() > 0)
+                if (Info.IsPortPresent(Port.PS2) && Info.GetOnIndicators().Any())
                 {
                     SpecialRuleLogging[2] = true;
                     concreteList.Reverse();
@@ -380,6 +380,11 @@ public class CruelKeypadScript : MonoBehaviour
         }
     }
 
+    private Sprite GetSprite(char character)
+    {
+        return Sprites[Symbols.IndexOf(character)];
+    }
+
     private void HandleCaseE()
     {
         var concreteList = (List<char>)sortedSymbols;
@@ -390,7 +395,7 @@ public class CruelKeypadScript : MonoBehaviour
         }
         else if (stage == 2)
         {
-            if (StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
+            if (StageColor[0] == CruelKeypadsColor.Yellow || StageColor[0] == CruelKeypadsColor.Blue)
             {
                 SpecialRuleLogging[4] = true;
                 concreteList.Reverse();
@@ -398,7 +403,7 @@ public class CruelKeypadScript : MonoBehaviour
         }
         else
         {
-            if (StageColor[1] == Colors.Yellow || StageColor[1] == Colors.Blue || StageColor[0] == Colors.Yellow || StageColor[0] == Colors.Blue)
+            if (StageColor[1] == CruelKeypadsColor.Yellow || StageColor[1] == CruelKeypadsColor.Blue || StageColor[0] == CruelKeypadsColor.Yellow || StageColor[0] == CruelKeypadsColor.Blue)
             {
                 SpecialRuleLogging[4] = true;
                 concreteList.Reverse();
@@ -432,6 +437,29 @@ public class CruelKeypadScript : MonoBehaviour
                 yield return new WaitForSeconds(.1f);
             }
         }
-        yield break;
+    }
+
+    public IEnumerator TwitchHandleForcedSolve()
+    {
+        Debug.LogFormat("[Cruel Keypads #{0}] Force solve requested by twitch plays.", _moduleId);
+        for(var i = 0; i < PressedButtons.Count;++i)
+        {
+            if (PressedButtons[i] != sortedSymbols[i])
+            {
+                Initialize(true);
+            }
+        }
+        while(!_isSolved)
+        {
+            var symbols = pickedSymbols;
+            var correctOrder = sortedSymbols;
+
+            for (int i = buttonPressed.Count(x => x); i < 4; i++)
+            {
+                var correctButton = symbols.IndexOf(correctOrder[i]);
+                Buttons[correctButton].OnInteract();
+                yield return new WaitForSeconds(.1f);
+            }
+        }
     }
 }
