@@ -267,9 +267,9 @@ public class CruelKeypadScript : MonoBehaviour
                 break;
             }
         }
-        var solution = Diagrams.SingleOrDefault(x => x.IsMatch(circles));
+        var solution = Diagrams.Single(x => x.IsMatch(circles));
         sortedSymbols = pickedSymbols;
-        List<char> order = null;
+        List<char> order;
         switch (solution.Type)
         {
             case VennDiagram.A:
